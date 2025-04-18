@@ -12,5 +12,29 @@ export default defineConfig({
     outDir: 'dist',
     minify: 'terser',
     sourcemap: true,
+    // Improve chunking strategy for better loading performance
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          mui: ['@mui/material', '@mui/icons-material', '@emotion/react', '@emotion/styled'],
+          router: ['react-router-dom'],
+          query: ['@tanstack/react-query']
+        }
+      }
+    },
   },
+  // Handle SPA routing for Vercel
+  preview: {
+    port: 4173,
+    open: true,
+    // Serve all routes as index.html for SPA
+    proxy: {
+      '/': {
+        target: 'index.html',
+        changeOrigin: true,
+        rewrite: (path) => 'index.html'
+      }
+    }
+  }
 }) 
